@@ -33,7 +33,7 @@ public:
     // param: the data to search for
     // returns: a pointer to the node containing the data or NULL if the data
     //          was not found
-    Node<T> *search(T); //in progress
+    Node<T> *search(T); //done
     // Gets the current number of nodes in the tree
     // returns: the number of nodes in the tree
     int get_size(void); //done
@@ -120,24 +120,13 @@ void BST<T>::insert(T new_data)
 template <class T>
 Node<T> *BST<T>::search(T val)
 {
-    Node<T> *cur = new Node<T>;
-    cur->set_left(root->get_left());
-    int a = root->get_data();
-    cur->set_data(a);
-    cur->set_right(root->get_right());
-    cur = search_helper(cur, val);
-    return cur;
+    root = search_helper(root, val);
+    return root;
 }
 
 template <class T>
 void BST<T>::remove(T val)
 {
-    /* Node<T> *cur = new Node<T>;
-    cur->set_left(root->get_left());
-    int a = root->get_data();
-    cur->set_data(a);
-    cur->set_right(root->get_right());
-    remove_helper(cur, val);*/
     root = remove_helper(root, val);
 }
 
@@ -202,7 +191,7 @@ Node<T> *BST<T>::remove_helper(Node<T> *node, T remove_data)
             tmp = smallestNode(tmp->get_right());
             int a = tmp->get_data();
             node->set_data(a);
-            root->set_right(remove_helper(node->get_right(), tmp->get_data()));
+            root->set_right(remove_helper(node, tmp->get_data()));
         }
         return node;
     }
@@ -231,22 +220,19 @@ Node<T> *BST<T>::smallestNode(Node<T> *node)
 template <class T>
 Node<T> *BST<T>::search_helper(Node<T> *node, T val)
 {
-    if (node == NULL)
-    {
-        return NULL;
-    }
-    else if (node->get_data() == val)
+    if (node == NULL || node->get_data() == val)
     {
         return node;
     }
-    else if (node->get_data() > val)
-    {
-        node->set_right(search_helper(node->get_right(), val));
-    }
     else if (node->get_data() < val)
     {
-        node->set_left(search_helper(node->get_left(), val));
+      node = search_helper(node->get_right(), val);
     }
+    else if (node->get_data() > val)
+    {
+       node = search_helper(node->get_left(), val);
+    }
+    return node;
 }
 template <class T>
 void *BST<T>::inorder_helper(Node<T> *node, std::vector<T> *vector)
@@ -258,6 +244,7 @@ void *BST<T>::inorder_helper(Node<T> *node, std::vector<T> *vector)
     inorder_helper(node->get_left(), vector);
     vector->push_back(node->get_data());
     inorder_helper(node->get_right(), vector);
+    return 0;
 }
 template <class T>
 void *BST<T>::preorder_helper(Node<T> *node, std::vector<T> *vector)
@@ -269,6 +256,7 @@ void *BST<T>::preorder_helper(Node<T> *node, std::vector<T> *vector)
     vector->push_back(node->get_data());
     preorder_helper(node->get_left(), vector);
     preorder_helper(node->get_right(), vector);
+    return 0;
 }
 template <class T>
 void *BST<T>::postorder_helper(Node<T> *node, std::vector<T> *vector)
@@ -280,4 +268,5 @@ void *BST<T>::postorder_helper(Node<T> *node, std::vector<T> *vector)
     postorder_helper(node->get_left(), vector);
     postorder_helper(node->get_right(), vector);
     vector->push_back(node->get_data());
+    return 0;
 }
