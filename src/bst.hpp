@@ -19,7 +19,7 @@ public:
     void insert(T); //done
     // Removes data from the tree
     // param: The data to be removed from the tree
-    void remove(T); //in progress
+    void remove(T); //done
     // Performs an inorder traversal
     // returns: pointer to a vector containing the tree traversal
     std::vector<T> *inorder(void); //done
@@ -185,13 +185,14 @@ Node<T> *BST<T>::remove_helper(Node<T> *node, T remove_data)
             tmp = node->get_left();
             delete (node);
             return tmp;
-        } else 
+        } 
+        else 
         {
             Node<T> *tmp = new Node<T>;
-            tmp = smallestNode(tmp->get_right());
+            tmp = smallestNode(node->get_right());
             int a = tmp->get_data();
             node->set_data(a);
-            root->set_right(remove_helper(node, tmp->get_data()));
+            node->set_right(remove_helper(node->get_right(), tmp->get_data()));
         }
         return node;
     }
